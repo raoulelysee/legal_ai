@@ -1,8 +1,3 @@
-"""
-Module de sécurité et guardrails pour l'application juridique.
-Protection contre les prompt injections, abus, et requêtes malicieuses.
-"""
-
 import re
 import logging
 from typing import Tuple, Optional, List, Dict
@@ -13,8 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class SecurityGuardrails:
-    """Système de guardrails multi-couches pour sécuriser l'application."""
-
     INJECTION_PATTERNS = [
         # Tentatives de modification du rôle/système
         r"(?i)(ignore|forget|disregard)\s+(all\s+)?(previous|above|prior|earlier)\s+(instructions?|prompts?|rules?|directives?)",
@@ -83,7 +76,7 @@ class SecurityGuardrails:
     MAX_QUERIES_PER_HOUR = 50
 
     def __init__(self):
-        """Initialise le système de guardrails."""
+
         self.compiled_patterns = [re.compile(p) for p in self.INJECTION_PATTERNS]
 
         # Rate limiting storage (en mémoire)
@@ -281,22 +274,59 @@ class SecurityGuardrails:
             if re.search(pattern, query):
                 return False, "❌ Cette requête concerne un sujet interdit ou potentiellement illégal."
 
-        # Liste blanche: contexte juridique acceptable
+        # Liste blanche STRICTE: mots-clés juridiques
         legal_keywords = [
-            "droit", "loi", "article", "code", "contrat", "testament",
+            # Termes juridiques généraux
+            "droit", "loi", "article", "code", "juridique", "légal",
+            "contrat", "testament", "jugement", "ordonnance",
+
+            # Procédures et acteurs
             "divorce", "succession", "bail", "hypothèque", "responsabilité",
-            "procédure", "tribunal", "jugement", "avocat", "notaire",
+            "procédure", "tribunal", "cour", "avocat", "notaire", "juge",
+            "plainte", "poursuite", "action", "recours", "appel",
+
+            # Codes et chartes
             "ccq", "c.c.q", "cpc", "c.p.c", "charte", "criminel",
-            "civil", "famille", "travail", "commercial"
+
+            # Domaines du droit
+            "civil", "famille", "travail", "commercial", "pénal",
+            "administratif", "constitutionnel", "fiscal",
+
+            # Concepts juridiques
+            "prescription", "délai", "nullité", "validité", "clause",
+            "obligation", "créance", "dette", "servitude", "propriété",
+            "locataire", "propriétaire", "employeur", "employé",
+            "conjoint", "époux", "enfant mineur", "tuteur", "curateur"
         ]
 
-        # Si aucun mot-clé juridique ET requête suspecte → rejet
+        # Mots-clés NON-juridiques (questions générales)
+        non_legal_keywords = [
+            "premier ministre", "président", "ministre", "député",
+            "élection", "politique", "gouvernement", "parti",
+            "météo", "température", "sport", "football", "hockey",
+            "recette", "cuisine", "restaurant", "film", "musique",
+            "acteur", "chanteur", "célébrité", "nouvelles",
+            "histoire", "géographie", "science", "mathématique",
+            "technologie", "ordinateur", "téléphone", "internet"
+        ]
+
+        # 1. Détection de sujets non-juridiques
+        has_non_legal = any(keyword in query_lower for keyword in non_legal_keywords)
+        if has_non_legal:
+            logger.warning(f"❌ Sujet non-juridique détecté: {query[:100]}")
+            return False, "❌ Je ne peux répondre qu'aux questions juridiques concernant le droit québécois. Cette question ne semble pas juridique."
+
+        # 2. Vérification des mots-clés juridiques
         has_legal_keyword = any(keyword in query_lower for keyword in legal_keywords)
 
+        # 3. Pour les requêtes de plus de 5 mots SANS mot-clé juridique → rejet strict
         if not has_legal_keyword and len(query.split()) > 5:
-            # Requête longue sans contexte juridique évident
-            logger.warning(f"⚠️  Requête sans contexte juridique clair: {query[:100]}")
-            # On peut être plus permissif ici, juste un warning
+            logger.warning(f"❌ Requête sans contexte juridique: {query[:100]}")
+            return False, "❌ Je ne peux répondre qu'aux questions juridiques concernant le droit québécois. Votre question ne contient aucun terme juridique reconnu."
+
+        # 4. Pour les courtes requêtes sans mot-clé → avertissement mais accepté
+        if not has_legal_keyword and len(query.split()) <= 5:
+            logger.warning(f"⚠️  Requête courte sans contexte juridique clair (acceptée): {query[:100]}")
 
         return True, None
 
