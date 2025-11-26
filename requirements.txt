@@ -1,0 +1,12 @@
+streamlit
+langchain
+langchain-openai
+langchain-community
+pinecone
+python-dotenv
+pypdf
+tqdm
+streamlit-mic-recorder
+openai
+langsmith
+tavily-python
