@@ -22,7 +22,7 @@ class Config:
     # Pinecone Configuration
     PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
     PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")
-    PINECONE_NAMESPACE = os.getenv("PINECONE_NAMESPACE", "juridique_v2")
+    PINECONE_NAMESPACE = os.getenv("PINECONE_NAMESPACE")
 
     # Modèles
     EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
