@@ -42,8 +42,8 @@ class Config:
     APP_PASSWORD = os.getenv("APP_PASSWORD", "")
 
     # LangSmith (optionnel - pour le traçage et debugging)
-    LANGCHAIN_TRACING_V2 = os.getenv("LANGCHAIN_TRACING_V2", "false").lower() == "true"
-    LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY", "")
+    LANGCHAIN_TRACING_V2 = os.getenv("LANGCHAIN_TRACING_V2")
+    LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
     LANGCHAIN_PROJECT = os.getenv("LANGCHAIN_PROJECT", "encyclopedie-juridique")
 
     # Textes légaux
