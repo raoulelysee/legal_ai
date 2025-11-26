@@ -297,7 +297,7 @@ def main():
     check_password()
 
     # Titre et disclaimer
-    st.title("⚖️ Encyclopédie juridique du Québec")
+    st.title("⚖️ Répertoire juridique Qc & Canada (en apprentissage)")
     st.caption(
         "Le contenu de ce site est purement informatif et ne peut être interprété comme un avis juridique. "
         "L'utilisateur ne devrait prendre aucune décision en se basant uniquement sur ces renseignements. "
