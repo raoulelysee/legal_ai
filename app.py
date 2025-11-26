@@ -159,6 +159,38 @@ def render_sidebar():
         st.markdown("### 📊 Statistiques")
         st.metric("Messages", len(st.session_state.messages))
 
+        st.sidebar.header("📚 Database Statistics")
+
+        # Get statistics when app loads
+        if 'law_stats' not in st.session_state:
+            with st.spinner("Loading database statistics..."):
+                rag_engine = get_rag_engine()
+                st.session_state.law_stats = rag_engine.get_law_statistics()
+        
+        stats = st.session_state.law_stats
+        
+        # Display statistics
+        st.sidebar.metric("Total Laws", stats['total_laws'])
+        st.sidebar.metric("Total Articles/Chunks", f"{stats['total_chunks']:,}")
+        
+        # Add expandable section to show all laws
+        with st.sidebar.expander("📋 View All Available Laws"):
+            st.write(f"**{stats['total_laws']} laws available:**")
+        
+            # Search filter
+            search_filter = st.text_input("Filter laws:", "", key="law_filter")
+        
+            # Display filtered list
+            laws = stats['laws']
+            if search_filter:
+                laws = [law for law in laws if search_filter.lower() in law.lower()]
+        
+            if laws:
+                for idx, law in enumerate(laws, 1):
+                    st.write(f"{idx}. {law}")
+            else:
+                st.write("No laws match the filter.")
+
         st.markdown("---")
         st.markdown("### 🔧 Caractéristiques")
         st.markdown("""
