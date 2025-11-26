@@ -172,6 +172,7 @@ def render_sidebar():
 
         st.markdown("---")
         st.markdown("### ℹ️ À propos")
+        st.markdown("### Version 0.10")
         st.markdown("""
         Cette application utilise l'IA pour répondre
         à vos questions juridiques sur le droit québécois et canadien.
