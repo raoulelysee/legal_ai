@@ -1,13 +1,23 @@
+"""
+Module de sécurité et guardrails pour l'application juridique.
+Protection contre les prompt injections, abus, et requêtes malicieuses.
+"""
+
 import re
 import logging
 from typing import Tuple, Optional, List, Dict
 from datetime import datetime, timedelta
 from collections import defaultdict
 
+from langchain_groq import ChatGroq
+from config import Config
+
 logger = logging.getLogger(__name__)
 
 
 class SecurityGuardrails:
+    """Système de guardrails multi-couches pour sécuriser l'application."""
+
     INJECTION_PATTERNS = [
         # Tentatives de modification du rôle/système
         r"(?i)(ignore|forget|disregard)\s+(all\s+)?(previous|above|prior|earlier)\s+(instructions?|prompts?|rules?|directives?)",
@@ -76,11 +86,19 @@ class SecurityGuardrails:
     MAX_QUERIES_PER_HOUR = 50
 
     def __init__(self):
-
+        """Initialise le système de guardrails."""
         self.compiled_patterns = [re.compile(p) for p in self.INJECTION_PATTERNS]
 
         # Rate limiting storage (en mémoire)
         self.query_history: Dict[str, List[datetime]] = defaultdict(list)
+
+        # LLM pour validation de contexte juridique
+        self.llm = ChatGroq(
+            model="llama-3.1-8b-instant",
+            api_key=Config.GROQ_API_KEY,
+            temperature=0,
+            max_tokens=50
+        )
 
         logger.info("✅ Guardrails de sécurité initialisés")
 
@@ -251,7 +269,10 @@ class SecurityGuardrails:
 
     def validate_legal_context(self, query: str) -> Tuple[bool, Optional[str]]:
         """
-        Vérifie que la requête est dans un contexte juridique approprié.
+        Vérifie que la requête est dans un contexte juridique approprié via LLM.
+
+        Utilise un LLM pour déterminer si la question est juridique ou non,
+        au lieu de listes noires rigides qui peuvent bloquer des questions légitimes.
 
         Args:
             query: Requête utilisateur
@@ -259,76 +280,46 @@ class SecurityGuardrails:
         Returns:
             Tuple[bool, Optional[str]]: (est_légal_context, message)
         """
-        query_lower = query.lower()
+        try:
+            # Prompt pour le LLM validateur
+            validation_prompt = f"""Tu es un classificateur de questions juridiques. Ta seule tâche est de déterminer si une question concerne le DROIT (québécois ou canadien).
 
-        # Liste noire: sujets explicitement interdits
-        forbidden_topics = [
-            r"(?i)(how\s+to|comment)\s+(hack|pirate|crack|steal|cheat|fraud)",
-            r"(?i)(illegal|illégal)\s+(activity|activité|drug|drogue|weapon|arme)",
-            r"(?i)(make|create|build)\s+(bomb|bombe|weapon|arme|explosive)",
-            r"(?i)(avoid|éviter|hide|cacher)\s+(tax|impôt|detection|détection)",
-            r"(?i)(launder|blanchir)\s+money",
-        ]
+Réponds UNIQUEMENT par "OUI" ou "NON".
 
-        for pattern in forbidden_topics:
-            if re.search(pattern, query):
-                return False, "❌ Cette requête concerne un sujet interdit ou potentiellement illégal."
+Réponds "OUI" si la question concerne:
+- Le droit québécois (Code civil, lois provinciales, procédures, etc.)
+- Le droit canadien fédéral (Code criminel, Constitution, Charte, immigration, etc.)
+- Des aspects juridiques, légaux, réglementaires
+- Des procédures judiciaires, tribunaux, avocats, notaires
+- Des droits, obligations, responsabilités légales
+- Même si la question mentionne des politiciens DANS UN CONTEXTE JURIDIQUE (ex: "Quels sont les pouvoirs juridiques du premier ministre?")
 
-        # Liste blanche STRICTE: mots-clés juridiques
-        legal_keywords = [
-            # Termes juridiques généraux
-            "droit", "loi", "article", "code", "juridique", "légal",
-            "contrat", "testament", "jugement", "ordonnance",
+Réponds "NON" si la question concerne:
+- La météo, le sport, la cuisine, le divertissement
+- L'actualité politique générale (élections, partis)
+- La technologie, la science pure
+- Des sujets sans lien avec le droit
 
-            # Procédures et acteurs
-            "divorce", "succession", "bail", "hypothèque", "responsabilité",
-            "procédure", "tribunal", "cour", "avocat", "notaire", "juge",
-            "plainte", "poursuite", "action", "recours", "appel",
+Question: "{query}"
 
-            # Codes et chartes
-            "ccq", "c.c.q", "cpc", "c.p.c", "charte", "criminel",
+Réponse (OUI ou NON):"""
 
-            # Domaines du droit
-            "civil", "famille", "travail", "commercial", "pénal",
-            "administratif", "constitutionnel", "fiscal",
+            # Appelle le LLM
+            response = self.llm.invoke(validation_prompt)
+            answer = response.content.strip().upper()
 
-            # Concepts juridiques
-            "prescription", "délai", "nullité", "validité", "clause",
-            "obligation", "créance", "dette", "servitude", "propriété",
-            "locataire", "propriétaire", "employeur", "employé",
-            "conjoint", "époux", "enfant mineur", "tuteur", "curateur"
-        ]
+            # Analyse la réponse
+            if "OUI" in answer:
+                logger.info(f"✅ Question juridique validée par LLM: {query[:100]}")
+                return True, None
+            else:
+                logger.warning(f"❌ Question non-juridique détectée par LLM: {query[:100]}")
+                return False, "❌ Je ne peux répondre qu'aux questions juridiques concernant le droit québécois ou canadien. Votre question ne semble pas porter sur un sujet juridique."
 
-        # Mots-clés NON-juridiques (questions générales)
-        non_legal_keywords = [
-            "premier ministre", "président", "ministre", "député",
-            "élection", "politique", "gouvernement", "parti",
-            "météo", "température", "sport", "football", "hockey",
-            "recette", "cuisine", "restaurant", "film", "musique",
-            "acteur", "chanteur", "célébrité", "nouvelles",
-            "histoire", "géographie", "science", "mathématique",
-            "technologie", "ordinateur", "téléphone", "internet"
-        ]
-
-        # 1. Détection de sujets non-juridiques
-        has_non_legal = any(keyword in query_lower for keyword in non_legal_keywords)
-        if has_non_legal:
-            logger.warning(f"❌ Sujet non-juridique détecté: {query[:100]}")
-            return False, "❌ Je ne peux répondre qu'aux questions juridiques concernant le droit québécois. Cette question ne semble pas juridique."
-
-        # 2. Vérification des mots-clés juridiques
-        has_legal_keyword = any(keyword in query_lower for keyword in legal_keywords)
-
-        # 3. Pour les requêtes de plus de 5 mots SANS mot-clé juridique → rejet strict
-        if not has_legal_keyword and len(query.split()) > 5:
-            logger.warning(f"❌ Requête sans contexte juridique: {query[:100]}")
-            return False, "❌ Je ne peux répondre qu'aux questions juridiques concernant le droit québécois. Votre question ne contient aucun terme juridique reconnu."
-
-        # 4. Pour les courtes requêtes sans mot-clé → avertissement mais accepté
-        if not has_legal_keyword and len(query.split()) <= 5:
-            logger.warning(f"⚠️  Requête courte sans contexte juridique clair (acceptée): {query[:100]}")
-
-        return True, None
+        except Exception as e:
+            logger.error(f"⚠️ Erreur validation LLM: {e}. Fallback vers validation permissive.")
+            # En cas d'erreur, on accepte (fail-open) pour ne pas bloquer les utilisateurs
+            return True, None
 
     def full_validation(self, query: str, user_id: str = "default") -> Tuple[bool, Optional[str]]:
         """
