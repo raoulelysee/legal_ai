@@ -1,8 +1,3 @@
-"""
-Application Streamlit pour l'Encyclopédie Juridique du Québec.
-Version sécurisée et modularisée.
-"""
-
 import sys
 import logging
 import streamlit as st
@@ -32,14 +27,13 @@ else:
 
 # --- Configuration Streamlit ---
 st.set_page_config(
-    page_title="Encyclopédie Juridique",
+    page_title="Répertoire de lois du Qc et du Canada(en apprentissage)",
     page_icon="⚖️",
     layout="wide"
 )
 
 
 def check_password():
-    """Vérifie le mot de passe si la protection est activée."""
     if not Config.ENABLE_PASSWORD_PROTECTION:
         return True
 
@@ -154,7 +148,6 @@ def render_css():
 
 
 def render_sidebar():
-    """Affiche la barre latérale avec les options."""
     with st.sidebar:
         st.header("⚙️ Options")
 
@@ -189,7 +182,6 @@ def render_sidebar():
 
 
 def render_message_badges(metadata: dict):
-    """Affiche les badges de source pour un message."""
     badges = []
 
     if metadata.get("used_pinecone"):
@@ -208,7 +200,6 @@ def render_message_badges(metadata: dict):
 
 
 def render_chat_history():
-    """Affiche l'historique des messages."""
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -218,7 +209,6 @@ def render_chat_history():
 
 
 def render_input_bar(audio_manager):
-    """Affiche la barre d'input avec texte et audio."""
     with st.container():
         st.markdown('<div class="input-bar-container">', unsafe_allow_html=True)
         col1, col2 = st.columns([5, 1])
@@ -253,7 +243,6 @@ def render_input_bar(audio_manager):
 
 
 def process_query(prompt: str, rag_engine, audio_manager, is_audio_input: bool):
-    """Traite une requête utilisateur et génère une réponse."""
     # Génère un user_id pour le rate limiting (basé sur la session Streamlit)
     import hashlib
     if "user_id" not in st.session_state:
@@ -304,7 +293,6 @@ def process_query(prompt: str, rag_engine, audio_manager, is_audio_input: bool):
 
 
 def main():
-    """Fonction principale de l'application."""
     # Vérification du mot de passe si nécessaire
     check_password()
 
