@@ -611,7 +611,7 @@ Ce projet est fourni à des fins éducatives et de recherche. Les lois et docume
 
 ## 👥 Contributeurs
 
-Développé avec ❤️ pour faciliter l'accès au droit québécois et canadien.
+Développé avec ❤️ par Raoul Elysée pour faciliter l'accès au droit québécois et canadien.
 
 ---
 
