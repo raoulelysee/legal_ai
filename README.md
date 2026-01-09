@@ -46,6 +46,7 @@
 - 🏛️ Références au Code de procédure civile (C.p.c.)
 - 🇨🇦 Droit pénal canadien (Code criminel)
 - 🎓 Aide à l'apprentissage pour étudiants en droit
+- https://huggingface.co/spaces/raoulelysee/repertoire_juridique
 
 ---
 
