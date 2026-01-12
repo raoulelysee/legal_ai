@@ -1,7 +1,7 @@
-# ⚖️ Répertoire Juridique Québec & Canada
+# ⚖️ Legal Directory Quebec & Canada
 
-> **Application d'intelligence artificielle pour la recherche juridique interactive**
-> Questions-réponses sur le droit québécois et canadien avec support vocal et citations des sources
+> **Artificial intelligence application for interactive legal research**
+> Q&A on Quebec and Canadian law with voice support and source citations
 
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://langchain.com/)
@@ -9,121 +9,120 @@
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
 **Version:** 0.10
-**Statut:** En apprentissage continu
+**Status:** Continuous Learning
 
 ---
 
-## 📋 Table des matières
+## 📋 Table of Contents
 
-- [Aperçu](#-aperçu)
-- [Fonctionnalités](#-fonctionnalités)
+- [Overview](#-overview)
+- [Features](#-features)
 - [Architecture](#-architecture)
 - [Technologies](#-technologies)
 - [Installation](#-installation)
 - [Configuration](#-configuration)
-- [Utilisation](#-utilisation)
-- [Sécurité](#-sécurité)
-- [Déploiement](#-déploiement)
-- [Avertissement légal](#️-avertissement-légal)
+- [Usage](#-usage)
+- [Security](#-security)
+- [Deployment](#-deployment)
+- [Legal Disclaimer](#️-legal-disclaimer)
 
 ---
 
-## 🎯 Aperçu
+## 🎯 Overview
 
-**Répertoire Juridique** est une application web conversationnelle qui utilise l'intelligence artificielle pour répondre aux questions sur le droit québécois et canadien. L'application combine :
+**Legal Directory** is a conversational web application that uses artificial intelligence to answer questions about Quebec and Canadian law. The application combines:
 
-- **Base de données juridique interne** (Pinecone) contenant des documents juridiques vérifiés
-- **Recherche web en temps réel** (Tavily) pour les informations récentes
-- **Modèles de langage avancés** (Groq LLama 3.3 70B) pour la génération de réponses
-- **Support vocal** (Speech-to-Text et Text-to-Speech)
-- **Système de sécurité multi-couches** (guardrails contre les abus)
-- Démo sur mon Space Huggingface : https://huggingface.co/spaces/raoulelysee/repertoire_juridique
+- **Internal legal database** (Pinecone) containing verified legal documents
+- **Real-time web search** (Tavily) for recent information
+- **Advanced language models** (Groq LLama 3.3 70B) for response generation
+- **Voice support** (Speech-to-Text and Text-to-Speech)
+- **Multi-layer security system** (guardrails against abuse)
 
-### Cas d'usage
+### Use Cases
 
-- 📚 Recherche de jurisprudence québécoise et canadienne
-- 📖 Consultation rapide du Code civil du Québec (C.c.Q.)
-- ⚖️ Questions sur les procédures judiciaires
-- 🏛️ Références au Code de procédure civile (C.p.c.)
-- 🇨🇦 Droit pénal canadien (Code criminel)
-- 🎓 Aide à l'apprentissage pour étudiants en droit
+- 📚 Quebec and Canadian case law research
+- 📖 Quick consultation of the Civil Code of Quebec (C.C.Q.)
+- ⚖️ Questions about judicial procedures
+- 🏛️ References to the Code of Civil Procedure (C.C.P.)
+- 🇨🇦 Canadian criminal law (Criminal Code)
+- 🎓 Learning assistance for law students
 
 ---
 
-## ✨ Fonctionnalités
+## ✨ Features
 
-### 🔍 Recherche hybride RAG (Retrieval-Augmented Generation)
+### 🔍 Hybrid RAG Search (Retrieval-Augmented Generation)
 
-- **Fusion de sources multiples**
-  - Base de données vectorielle Pinecone (documents juridiques vérifiés)
-  - Recherche web Tavily (actualités juridiques récentes)
-  - Priorisation intelligente : base de données > web
+- **Multi-source fusion**
+  - Pinecone vector database (verified legal documents)
+  - Tavily web search (recent legal news)
+  - Intelligent prioritization: database > web
 
-- **Expansion de requêtes**
-  - Génération automatique de 5 variantes de la question
-  - Extraction d'entités juridiques (articles, codes, concepts)
-  - Utilisation de termes juridiques précis du Québec
+- **Query expansion**
+  - Automatic generation of 5 question variants
+  - Legal entity extraction (articles, codes, concepts)
+  - Use of precise Quebec legal terminology
 
-- **Filtrage par pertinence**
-  - Seuil de similarité : ≥55%
-  - Recherche élargie : 20 résultats analysés
-  - Contexte maximal : 12 000 tokens
+- **Relevance filtering**
+  - Similarity threshold: ≥55%
+  - Extended search: 20 results analyzed
+  - Maximum context: 12,000 tokens
 
-### 💬 Interface conversationnelle
+### 💬 Conversational Interface
 
-- **Chat interactif** avec historique des messages
-- **Citations des sources** avec scores de similarité
-- **Badges visuels** : 📚 Base de données | 🌐 Web
-- **Disclaimer légal** automatique
-- **Barre d'input fixe** en bas de page
-- **Mode sombre/clair** natif Streamlit
+- **Interactive chat** with message history
+- **Source citations** with similarity scores
+- **Visual badges**: 📚 Database | 🌐 Web
+- **Automatic legal disclaimer**
+- **Fixed input bar** at bottom of page
+- **Dark/light mode** native Streamlit
 
-### 🎤 Support audio (optionnel)
+### 🎤 Audio Support (optional)
 
 - **Speech-to-Text (STT)**
-  - Modèle : Whisper Large V3 (Groq)
-  - Enregistrement via microphone intégré
-  - Transcription automatique en français
+  - Model: Whisper Large V3 (Groq)
+  - Recording via built-in microphone
+  - Automatic transcription in French
 
 - **Text-to-Speech (TTS)**
-  - Modèle : OpenAI TTS-1
-  - Voix : Nova (voix féminine naturelle)
-  - Lecture automatique des réponses vocales
+  - Model: OpenAI TTS-1
+  - Voice: Nova (natural female voice)
+  - Automatic playback of voice responses
 
-### 🛡️ Sécurité et guardrails
+### 🛡️ Security and Guardrails
 
-- **Protection contre prompt injection**
-  - Détection de 40+ patterns d'attaque
-  - Analyse sémantique par LLM dédié
-  - Score de risque calculé automatiquement
+- **Prompt injection protection**
+  - Detection of 40+ attack patterns
+  - Semantic analysis by dedicated LLM
+  - Automatically calculated risk score
 
 - **Rate limiting**
-  - 10 requêtes / minute
-  - 50 requêtes / heure
-  - Tracking par session utilisateur
+  - 10 requests / minute
+  - 50 requests / hour
+  - Tracking per user session
 
-- **Validation des requêtes**
-  - Longueur : 3-2000 caractères
-  - Détection SQL/code injection
-  - Filtrage de mots-clés suspects
+- **Request validation**
+  - Length: 3-2000 characters
+  - SQL/code injection detection
+  - Suspicious keyword filtering
 
-- **Protection optionnelle par mot de passe**
-  - Activable via `.env`
-  - Contrôle d'accès à l'application
+- **Optional password protection**
+  - Activatable via `.env`
+  - Application access control
 
 ---
 
 ## 🏗️ Architecture
 
-### Vue d'ensemble
+### Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   INTERFACE UTILISATEUR                     │
+│                    USER INTERFACE                           │
 │                     (Streamlit Chat)                        │
 │  ┌────────────────┐              ┌────────────────┐        │
-│  │  Input Texte   │              │  Input Audio   │        │
-│  │  + Formulaire  │              │  (Microphone)  │        │
+│  │  Text Input    │              │  Audio Input   │        │
+│  │  + Form        │              │  (Microphone)  │        │
 │  └───────┬────────┘              └────────┬───────┘        │
 │          │                                 │                │
 │          └────────────┬────────────────────┘                │
@@ -161,17 +160,17 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Modules principaux
+### Main Modules
 
-| Module | Fichier | Responsabilité |
-|--------|---------|----------------|
-| **Interface** | `app.py` | UI Streamlit, gestion session, routing |
-| **Moteur RAG** | `rag_engine.py` | Retrieval, expansion requêtes, synthèse LLM |
-| **Sécurité** | `guardrails.py` | Validation, rate limiting, injection detection |
+| Module | File | Responsibility |
+|--------|------|----------------|
+| **Interface** | `app.py` | Streamlit UI, session management, routing |
+| **RAG Engine** | `rag_engine.py` | Retrieval, query expansion, LLM synthesis |
+| **Security** | `guardrails.py` | Validation, rate limiting, injection detection |
 | **Audio** | `audio_utils.py` | STT (Whisper), TTS (OpenAI) |
-| **Configuration** | `config.py` | Variables d'environnement, validation API keys |
+| **Configuration** | `config.py` | Environment variables, API key validation |
 
-### Flux de données
+### Data Flow
 
 ```mermaid
 graph TD
@@ -199,21 +198,21 @@ graph TD
 
 ## 🛠️ Technologies
 
-### Stack principal
+### Main Stack
 
-| Catégorie | Technologie | Version | Usage |
-|-----------|-------------|---------|-------|
-| **Framework** | Streamlit | latest | Interface web |
-| **Orchestration** | LangChain | latest | Pipeline RAG |
-| **LLM Provider** | Groq | - | Modèles LLama 3.3 70B |
-| **Embeddings** | OpenAI | text-embedding-3-small | Vectorisation |
-| **Vector DB** | Pinecone | latest | Base de connaissances |
-| **Web Search** | Tavily | latest | Recherche temps réel |
+| Category | Technology | Version | Usage |
+|----------|------------|---------|-------|
+| **Framework** | Streamlit | latest | Web interface |
+| **Orchestration** | LangChain | latest | RAG pipeline |
+| **LLM Provider** | Groq | - | LLama 3.3 70B models |
+| **Embeddings** | OpenAI | text-embedding-3-small | Vectorization |
+| **Vector DB** | Pinecone | latest | Knowledge base |
+| **Web Search** | Tavily | latest | Real-time search |
 | **Audio STT** | Groq Whisper | Large V3 | Transcription |
-| **Audio TTS** | OpenAI | TTS-1 | Synthèse vocale |
-| **Monitoring** | LangSmith | latest | Traçage (optionnel) |
+| **Audio TTS** | OpenAI | TTS-1 | Voice synthesis |
+| **Monitoring** | LangSmith | latest | Tracing (optional) |
 
-### Dépendances Python
+### Python Dependencies
 
 ```txt
 streamlit
@@ -231,79 +230,79 @@ langsmith
 tavily-python
 ```
 
-### Modèles utilisés
+### Models Used
 
 - **Embeddings:** `text-embedding-3-small` (OpenAI)
 - **Expansion:** `llama-3.3-70b-versatile` (Groq)
-- **Synthèse:** `llama-3.3-70b-versatile` (Groq)
+- **Synthesis:** `llama-3.3-70b-versatile` (Groq)
 - **Guardrails:** `llama-3.1-8b-instant` (Groq)
 - **STT:** `whisper-large-v3` (Groq)
-- **TTS:** `tts-1` voix Nova (OpenAI)
+- **TTS:** `tts-1` Nova voice (OpenAI)
 
 ---
 
 ## 📦 Installation
 
-### Prérequis
+### Prerequisites
 
 - Python 3.10+
-- Clés API requises :
+- Required API keys:
   - OpenAI (embeddings + TTS)
   - Groq (LLMs + STT)
   - Pinecone (vector database)
   - Tavily (web search)
 
-### Installation locale
+### Local Installation
 
-1. **Cloner le dépôt**
+1. **Clone the repository**
 
 ```bash
 git clone <repository-url>
 cd repertoire_juridique
 ```
 
-2. **Créer un environnement virtuel**
+2. **Create a virtual environment**
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # Sur Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. **Installer les dépendances**
+3. **Install dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configurer les variables d'environnement**
+4. **Configure environment variables**
 
-Créer un fichier `.env` à la racine :
+Create a `.env` file at the root:
 
 ```bash
-# Copier le template
+# Copy the template
 cp .env.example .env
 
-# Éditer avec vos clés API
+# Edit with your API keys
 nano .env
 ```
 
-5. **Lancer l'application**
+5. **Launch the application**
 
 ```bash
 streamlit run app.py
 ```
 
-L'application sera accessible à `http://localhost:8501`
+The application will be accessible at `http://localhost:8501`
 
 ---
 
 ## ⚙️ Configuration
 
-### Fichier `.env` (requis)
+### `.env` File (required)
 
 ```bash
 # ==========================================
-# API KEYS (TOUTES OBLIGATOIRES)
+# API KEYS (ALL REQUIRED)
 # ==========================================
 
 # OpenAI (embeddings + TTS)
@@ -321,7 +320,7 @@ PINECONE_NAMESPACE=default
 TAVILY_API_KEY=tvly-...
 
 # ==========================================
-# CONFIGURATION RAG (OPTIONNEL)
+# RAG CONFIGURATION (OPTIONAL)
 # ==========================================
 
 # Embeddings
@@ -331,21 +330,21 @@ EMBEDDING_MODEL=text-embedding-3-small
 EXPANDER_MODEL=llama-3.3-70b-versatile
 SYNTHESIZER_MODEL=llama-3.3-70b-versatile
 
-# Paramètres de recherche
+# Search parameters
 MIN_SIMILARITY_SCORE=0.55
 MAX_CONTEXT_TOKENS=12000
 MIN_CONTEXT_LENGTH=100
 
 # ==========================================
-# SÉCURITÉ (OPTIONNEL)
+# SECURITY (OPTIONAL)
 # ==========================================
 
-# Protection par mot de passe
+# Password protection
 ENABLE_PASSWORD_PROTECTION=false
 APP_PASSWORD=your-secure-password
 
 # ==========================================
-# MONITORING (OPTIONNEL)
+# MONITORING (OPTIONAL)
 # ==========================================
 
 # LangSmith tracing
@@ -354,156 +353,156 @@ LANGCHAIN_API_KEY=ls__...
 LANGCHAIN_PROJECT=repertoire-juridique
 ```
 
-### Variables d'environnement détaillées
+### Detailed Environment Variables
 
-#### API Keys obligatoires
+#### Required API Keys
 
 | Variable | Source | Description |
 |----------|--------|-------------|
 | `OPENAI_API_KEY` | [OpenAI Platform](https://platform.openai.com/) | Embeddings + TTS |
 | `GROQ_API_KEY` | [Groq Console](https://console.groq.com/) | LLMs + STT |
 | `PINECONE_API_KEY` | [Pinecone Console](https://www.pinecone.io/) | Vector database |
-| `PINECONE_INDEX_NAME` | Pinecone | Nom de l'index (ex: `legal-docs-quebec`) |
-| `PINECONE_NAMESPACE` | Pinecone | Namespace (ex: `default`) |
+| `PINECONE_INDEX_NAME` | Pinecone | Index name (e.g., `legal-docs-quebec`) |
+| `PINECONE_NAMESPACE` | Pinecone | Namespace (e.g., `default`) |
 | `TAVILY_API_KEY` | [Tavily](https://tavily.com/) | Web search API |
 
-#### Paramètres RAG (optionnels)
+#### RAG Parameters (optional)
 
-- **`MIN_SIMILARITY_SCORE`** (défaut: `0.55`)
-  - Seuil de similarité cosinus minimum
-  - Chunks avec score < 0.55 sont rejetés
+- **`MIN_SIMILARITY_SCORE`** (default: `0.55`)
+  - Minimum cosine similarity threshold
+  - Chunks with score < 0.55 are rejected
 
-- **`MAX_CONTEXT_TOKENS`** (défaut: `12000`)
-  - Limite de tokens pour le contexte RAG
-  - Évite les dépassements de fenêtre LLM
+- **`MAX_CONTEXT_TOKENS`** (default: `12000`)
+  - Token limit for RAG context
+  - Prevents LLM window overflow
 
-- **`MIN_CONTEXT_LENGTH`** (défaut: `100`)
-  - Longueur minimale d'un chunk (caractères)
-  - Filtre les extraits trop courts
+- **`MIN_CONTEXT_LENGTH`** (default: `100`)
+  - Minimum chunk length (characters)
+  - Filters out chunks that are too short
 
-#### Sécurité (optionnelle)
+#### Security (optional)
 
-- **`ENABLE_PASSWORD_PROTECTION`** (défaut: `false`)
-  - Activez pour protéger l'app par mot de passe
+- **`ENABLE_PASSWORD_PROTECTION`** (default: `false`)
+  - Enable to protect the app with a password
 
 - **`APP_PASSWORD`**
-  - Mot de passe requis si protection activée
+  - Required password if protection is enabled
 
 ---
 
-## 🚀 Utilisation
+## 🚀 Usage
 
-### Interface web
+### Web Interface
 
-1. **Démarrer l'application**
+1. **Start the application**
    ```bash
    streamlit run app.py
    ```
 
-2. **Poser une question**
-   - **Option 1 (Texte):** Tapez votre question dans la barre d'input en bas
-   - **Option 2 (Audio):** Cliquez sur 🎤 et parlez
+2. **Ask a question**
+   - **Option 1 (Text):** Type your question in the input bar at the bottom
+   - **Option 2 (Audio):** Click on 🎤 and speak
 
-3. **Exemples de questions**
+3. **Example questions**
    ```
-   - Quelles sont les conditions de validité d'un contrat au Québec?
-   - Comment fonctionne le divorce au Québec selon le Code civil?
-   - Quelle est la procédure pour une petite créance au Québec?
-   - Quels sont les délais de prescription en responsabilité civile?
-   - Comment contester une contravention au Québec?
+   - What are the validity conditions for a contract in Quebec?
+   - How does divorce work in Quebec according to the Civil Code?
+   - What is the procedure for a small claims case in Quebec?
+   - What are the limitation periods in civil liability?
+   - How to contest a traffic ticket in Quebec?
    ```
 
-4. **Lire la réponse**
-   - La réponse s'affiche avec des citations des sources
-   - Les badges indiquent l'origine : 📚 Base de données | 🌐 Web
-   - Si entrée audio, la réponse est lue automatiquement
+4. **Read the response**
+   - The response displays with source citations
+   - Badges indicate the origin: 📚 Database | 🌐 Web
+   - If audio input, the response is automatically read aloud
 
-### Fonctionnalités de la sidebar
+### Sidebar Features
 
-- **🗑️ Effacer l'historique** : Réinitialise la conversation
-- **📊 Statistiques** : Nombre de messages échangés
-- **🔧 Caractéristiques** : Liste des fonctionnalités actives
+- **🗑️ Clear History**: Resets the conversation
+- **📊 Statistics**: Number of messages exchanged
+- **🔧 Features**: List of active functionalities
 
-### Raccourcis clavier
+### Keyboard Shortcuts
 
-- **Entrée** : Envoie le message (après avoir tapé dans l'input)
-- **Échap** : Ferme les popups
+- **Enter**: Sends the message (after typing in the input)
+- **Esc**: Closes popups
 
 ---
 
-## 🛡️ Sécurité
+## 🛡️ Security
 
-### Guardrails implémentés
+### Implemented Guardrails
 
-#### 1. Protection contre prompt injection
+#### 1. Prompt Injection Protection
 
-L'application détecte et bloque 40+ patterns d'attaque :
+The application detects and blocks 40+ attack patterns:
 
 ```python
-# Exemples de patterns détectés
+# Examples of detected patterns
 - "ignore previous instructions"
 - "you are now a hacker"
 - "show me your system prompt"
 - "bypass safety filters"
 ```
 
-#### 2. Validation de contexte juridique
+#### 2. Legal Context Validation
 
-Un LLM dédié (`llama-3.1-8b-instant`) vérifie :
-- ✅ Question liée au droit québécois/canadien
-- ❌ Requêtes hors sujet (médecine, finance, etc.)
+A dedicated LLM (`llama-3.1-8b-instant`) verifies:
+- ✅ Question related to Quebec/Canadian law
+- ❌ Off-topic queries (medicine, finance, etc.)
 
-#### 3. Rate limiting
+#### 3. Rate Limiting
 
-Limites par utilisateur (session) :
-- **10 requêtes / minute**
-- **50 requêtes / heure**
+Limits per user (session):
+- **10 requests / minute**
+- **50 requests / hour**
 
-Dépassement → erreur `429 Too Many Requests`
+Exceeded → `429 Too Many Requests` error
 
-#### 4. Sanitisation des inputs
+#### 4. Input Sanitization
 
-- Longueur : 3-2000 caractères
-- Détection SQL injection (`UNION SELECT`, `DROP TABLE`)
-- Détection code injection (`<script>`, `eval()`)
-- Filtrage shell commands (`curl`, `wget`, `bash`)
+- Length: 3-2000 characters
+- SQL injection detection (`UNION SELECT`, `DROP TABLE`)
+- Code injection detection (`<script>`, `eval()`)
+- Shell command filtering (`curl`, `wget`, `bash`)
 
-#### 5. Score de risque
+#### 5. Risk Score
 
-Chaque requête reçoit un score de risque :
-- **0-3** : ✅ Valide
-- **4-7** : ⚠️ Suspect (bloqué avec avertissement)
-- **8+** : 🚨 Attaque détectée (bloqué)
+Each query receives a risk score:
+- **0-3**: ✅ Valid
+- **4-7**: ⚠️ Suspicious (blocked with warning)
+- **8+**: 🚨 Attack detected (blocked)
 
-### Limitations de sécurité
+### Security Limitations
 
-⚠️ **Note importante** : Les guardrails ne sont pas infaillibles.
+⚠️ **Important Note**: Guardrails are not foolproof.
 
-- Les LLMs peuvent halluciner malgré les protections
-- Des attaques sophistiquées peuvent contourner les filtres
-- Le rate limiting est en mémoire (réinitialise au redémarrage)
+- LLMs can hallucinate despite protections
+- Sophisticated attacks may bypass filters
+- Rate limiting is in-memory (resets on restart)
 
-**Recommandations pour production :**
-- Implémenter un WAF (Web Application Firewall)
-- Utiliser Redis pour le rate limiting persistant
-- Ajouter un système de logs centralisé
-- Monitorer les patterns d'attaque avec SIEM
+**Production Recommendations:**
+- Implement a WAF (Web Application Firewall)
+- Use Redis for persistent rate limiting
+- Add a centralized logging system
+- Monitor attack patterns with SIEM
 
 ---
 
-## 🐳 Déploiement
+## 🐳 Deployment
 
 ### Docker
 
-L'application inclut un `Dockerfile` pour le déploiement containerisé.
+The application includes a `Dockerfile` for containerized deployment.
 
-#### Build de l'image
+#### Build the image
 
 ```bash
 docker build -t repertoire-juridique:latest .
 ```
 
-#### Run du conteneur
+#### Run the container
 
 ```bash
 docker run -p 8501:8501 \
@@ -515,9 +514,9 @@ docker run -p 8501:8501 \
   repertoire-juridique:latest
 ```
 
-#### Docker Compose (recommandé)
+#### Docker Compose (recommended)
 
-Créer `docker-compose.yml` :
+Create `docker-compose.yml`:
 
 ```yaml
 version: '3.8'
@@ -537,28 +536,28 @@ services:
       retries: 3
 ```
 
-Lancer :
+Launch:
 
 ```bash
 docker-compose up -d
 ```
 
-### Déploiement Streamlit Cloud
+### Streamlit Cloud Deployment
 
-1. **Pusher sur GitHub**
+1. **Push to GitHub**
    ```bash
    git push origin main
    ```
 
-2. **Connecter à Streamlit Cloud**
-   - Aller sur [share.streamlit.io](https://share.streamlit.io)
-   - Connecter votre dépôt GitHub
-   - Sélectionner `app.py` comme point d'entrée
+2. **Connect to Streamlit Cloud**
+   - Go to [share.streamlit.io](https://share.streamlit.io)
+   - Connect your GitHub repository
+   - Select `app.py` as the entry point
 
-3. **Configurer les secrets**
-   - Dans l'interface Streamlit Cloud
-   - Ajouter toutes les variables du `.env`
-   - Format TOML :
+3. **Configure secrets**
+   - In the Streamlit Cloud interface
+   - Add all variables from `.env`
+   - TOML format:
      ```toml
      OPENAI_API_KEY = "sk-..."
      GROQ_API_KEY = "gsk_..."
@@ -567,62 +566,62 @@ docker-compose up -d
      TAVILY_API_KEY = "tvly-..."
      ```
 
-4. **Déployer**
-   - Cliquer sur "Deploy"
-   - L'app sera accessible à `https://<app-name>.streamlit.app`
+4. **Deploy**
+   - Click "Deploy"
+   - The app will be accessible at `https://<app-name>.streamlit.app`
 
 ---
 
-## ⚖️ Avertissement légal
+## ⚖️ Legal Disclaimer
 
-**IMPORTANT : Cette application est fournie à titre informatif uniquement.**
+**IMPORTANT: This application is provided for informational purposes only.**
 
-### Limitations et responsabilités
+### Limitations and Responsibilities
 
-1. **Non-substitution à un avocat**
-   - Les réponses générées par l'IA ne constituent pas des conseils juridiques professionnels
-   - Consultez toujours un avocat ou un notaire pour des conseils adaptés à votre situation
+1. **Not a Substitute for a Lawyer**
+   - AI-generated responses do not constitute professional legal advice
+   - Always consult a lawyer or notary for advice tailored to your situation
 
-2. **Exactitude des informations**
-   - L'application fait de son mieux pour fournir des informations précises
-   - Des erreurs, omissions ou informations obsolètes peuvent survenir
-   - Les lois évoluent constamment
+2. **Information Accuracy**
+   - The application does its best to provide accurate information
+   - Errors, omissions, or outdated information may occur
+   - Laws are constantly evolving
 
-3. **Responsabilité limitée**
-   - L'utilisateur utilise cette application à ses propres risques
-   - Les développeurs ne peuvent être tenus responsables des décisions prises sur la base des informations fournies
+3. **Limited Liability**
+   - Users use this application at their own risk
+   - Developers cannot be held responsible for decisions made based on the information provided
 
-4. **Sources d'information**
-   - Base de données interne : documents juridiques québécois et canadiens
-   - Sources web : actualités juridiques via Tavily
-   - Les sources sont citées mais peuvent être incomplètes
+4. **Information Sources**
+   - Internal database: Quebec and Canadian legal documents
+   - Web sources: legal news via Tavily
+   - Sources are cited but may be incomplete
 
-### Clause de non-responsabilité
+### Disclaimer Clause
 
-> Le contenu de ce site est purement informatif et ne peut être interprété comme un avis juridique. L'utilisateur ne devrait prendre aucune décision en se basant uniquement sur ces renseignements. Consultez toujours un professionnel du droit pour des conseils adaptés à votre situation.
-
----
-
-## 📄 Licence
-
-Ce projet est fourni à des fins éducatives et de recherche. Les lois et documents juridiques du Québec et du Canada sont du domaine public.
+> The content of this site is purely informational and cannot be interpreted as legal advice. Users should not make any decisions based solely on this information. Always consult a legal professional for advice tailored to your situation.
 
 ---
 
-## 👥 Contributeurs
+## 📄 License
 
-Développé avec ❤️ par Raoul Elysée pour faciliter l'accès au droit québécois et canadien.
+This project is provided for educational and research purposes. Quebec and Canadian laws and legal documents are in the public domain.
+
+---
+
+## 👥 Contributors
+
+Developed with ❤️ by Raoul Elysée to facilitate access to Quebec and Canadian law.
 
 ---
 
 ## 📞 Support
 
-Pour toute question ou problème :
-- Ouvrir une issue sur GitHub
-- Vérifier la configuration des API keys
-- Consulter les logs : `app.log`
+For any questions or issues:
+- Open an issue on GitHub
+- Check API key configuration
+- Consult the logs: `app.log`
 
 ---
 
-**Version actuelle :** 0.10 (En apprentissage continu)
-**Dernière mise à jour :** 2026-01-08
+**Current version:** 0.10 (Continuous Learning)
+**Last update:** 2026-01-08
